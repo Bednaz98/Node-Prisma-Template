@@ -10,13 +10,15 @@
     "lib"
   ],
   "scripts": {
+    "postinstall": "prisma generate",
     "test": "jest",
     "lint": "npx eslint . --max-warnings 0",
     "increment": "npm version patch",
     "lint-fix": "eslint --fix",
     "build": "tsc -b",
     "pr-test": "npm run test",
-    "test-pack": "npm i && npm run build && npm pack"
+    "test-pack": "npm i && npm run build && npm pack",
+    "prisma-browser": "npx prisma studio"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.22.5",
@@ -28,6 +30,7 @@
     "@typescript-eslint/parser": "^5.61.0",
     "eslint": "^8.44.0",
     "jest": "^29.5.0",
+    "prisma": "^5.0.0",
     "ts-jest": "^29.1.0",
     "ts-node": "^10.9.1",
     "typescript": "^5.1.6"
@@ -41,5 +44,8 @@
   "bugs": {
     "url": "https://github.com/Bednaz98/NodeTemplate/issues"
   },
-  "homepage": "https://github.com/Bednaz98/NodeTemplate#readme"
+  "homepage": "https://github.com/Bednaz98/NodeTemplate#readme",
+  "dependencies": {
+    "@prisma/client": "^5.1.1"
+  }
 }
