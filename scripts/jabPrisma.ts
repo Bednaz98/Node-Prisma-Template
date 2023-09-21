@@ -24,7 +24,6 @@ async function getPrismaFiles() {
     return Promise.all(directories.map(async (m) => {
         try {
             const fileData = (await fs.readFile(jabDir + m + '/prisma/editSchema.prisma')).toString();
-            console.log("File: ", m, "\n \t ", fileData)
             return fileData
         } catch (error) {
             return '';

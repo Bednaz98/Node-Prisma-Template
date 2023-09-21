@@ -22,6 +22,9 @@
     "test-pack": "npm i && npm run build && npm pack",
     "prisma-browser": "npx prisma studio"
   },
+  "dependencies": {
+    "@prisma/client": "^5.1.1"
+  },
   "devDependencies": {
     "@babel/preset-env": "^7.22.5",
     "@babel/preset-typescript": "^7.22.5",
@@ -48,10 +51,5 @@
   "bugs": {
     "url": "https://github.com/Bednaz98/NodeTemplate/issues"
   },
-  "homepage": "https://github.com/Bednaz98/NodeTemplate#readme",
-  "dependencies": {
-    "@jabz/back-end-functions": "*",
-    "@jabz/db-logger": "*",
-    "@prisma/client": "^5.1.1"
-  }
+  "homepage": "https://github.com/Bednaz98/NodeTemplate#readme"
 }
