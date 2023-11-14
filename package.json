@@ -18,7 +18,7 @@
     "increment": "npm version patch",
     "lint-fix": "eslint --fix",
     "build": "tsc -b",
-    "pr-test": "npm run test",
+    "pr-test": "npm run test && npm run lint-fix && npm run lint",
     "test-pack": "npm i && npm run build && npm pack",
     "prisma-browser": "npx prisma studio"
   },
