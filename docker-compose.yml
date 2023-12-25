@@ -1,0 +1,20 @@
+services:
+  database:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD={{ DB_PASSWORD }}
+      - POSTGRES_USER={{ DB_USER }}
+    ports:
+      - 5432:5432
+    restart: always
+  system-service:
+    environment:
+      - DATABASE_URL=postgresql://{{ DB_USER }}:{{DB_PASSWORD}}@{{hostIp}}:5432/dev
+      - SYSTEM_PORT={{ SYSTEM_PORT }}
+      - SYSTEM_ENV={{ SYSTEM_ENV }}
+    image: ghcr.io/bednaz98/{{ repo_name }}:main
+    ports:
+      - {{ SYSTEM_PORT }}:{{ SYSTEM_PORT }}
+    restart: always
+    depends_on:
+      - database

@@ -1,6 +1,5 @@
 node_modules
 test
-scripts
 .git
 *Dockerfile*
 *docker-compose*
