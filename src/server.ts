@@ -38,8 +38,14 @@ function getPort() {
     return 3000;
 }
 
+function printPackageVersion() {
+    const packageJson = require('../package.json')
+    console.log(`package json version: ${packageJson.version} `)
+}
+
 const port = getPort();
 console.log(getDBStringDebug(process.env?.["LOG_DATABASE_URL"]));
+printPackageVersion();
 const server = app.listen(port, () => { console.log(`Starting test server: ${port}`) });
 export default server;
 

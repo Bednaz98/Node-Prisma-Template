@@ -1,7 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 
 export function getDBStringDebug(envString: string | undefined) {
-    if (!envString) return "N/A";
+    if (!envString) return "DB string: N/A";
     const firstSplit = envString.split('://')
     const dbType = firstSplit[0]
     const ipAddress = firstSplit[1].split(':')[1].split("@")[1]
