@@ -11,16 +11,17 @@
     "prisma"
   ],
   "scripts": {
-    "start": "ts-node ./src/server.ts",
-    "append-prisma": "ts-node ./scripts/jabPrisma.ts",
-    "postinstall": "npm run append-prisma && prisma generate",
+    "start": "npm run prisma-sync && ts-node ./src/server.ts",
+    "postinstall": "npm run generate",
     "test": "jest",
     "lint": "npx eslint . --max-warnings 0",
     "increment": "npm version patch",
     "lint-fix": "eslint --fix",
     "build": "tsc -b",
-    "pr-test": "npm run test && npm run lint-fix && npm run lint",
-    "test-pack": "npm i && npm run build && npm pack",
+    "pr-test": "npm run test",
+    "generate": "npx prisma generate",
+    "test-pack": "npm i && npm run generate && npm run build && npm pack",
+    "prisma-sync": "npx prisma db push",
     "prisma-browser": "npx prisma studio"
   },
   "dependencies": {
