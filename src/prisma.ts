@@ -13,7 +13,7 @@ export function getDBStringDebug(envString: string | undefined) {
 const getPrisma = (): PrismaClient => {
     console.log("\ngenerating prisma client #########################\n");
     try {
-        const dbString = process?.env?.["LOG_DATABASE_URL"];
+        const dbString = process?.env?.["DATABASE_URL"];
         if (dbString) {
             return new PrismaClient({
                 datasources: {
