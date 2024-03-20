@@ -6,6 +6,9 @@ env:
   REGISTRY: ghcr.io
   IMAGE_NAME: ${{github.repository}}
   LOG_DATABASE_URL: "postgresql://test:test@localhost:3000/log"
+  NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+  GIT_TOKEN: ${{secrets.GIT_TOKEN}}
+  NPM_TOKEN: ${{secrets.NPM_TOKEN}}
 on:
   push:
     branches: ["main"]
@@ -16,9 +19,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [latest]
+        node-version: ["19"]
         os: [ubuntu-latest]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
     steps:
       - uses: actions/checkout@v3
       - name: Use Node.js ${{ matrix.node-version }}
@@ -26,10 +28,11 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
+      - run: git config --global url."https://${{ secrets.GIT_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
+      - run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
       - run: npm ci
       - run: npm run build --if-present
       - run: npm test
-
   publish-npm:
     needs: quality
     if: ${{github.ref == 'refs/heads/main'}}
@@ -37,9 +40,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
-        with:
-          node-version: 16
-          registry-url: https://registry.npmjs.org/
+      - run: git config --global url."https://${{ secrets.GIT_TOKEN }}@github.com/".insteadOf ssh://git@github.com/
+      - run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" > ~/.npmrc
       - run: npm ci
       - run: npm run build
       - run: npm publish
@@ -49,6 +51,10 @@ jobs:
   publish-docker-normal:
     needs: [quality]
     runs-on: ubuntu-latest
+    env:
+      NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      GIT_TOKEN: ${{secrets.GIT_TOKEN}}
+      NPM_TOKEN: ${{secrets.NPM_TOKEN}}
     permissions:
       contents: read
       packages: write
@@ -65,13 +71,17 @@ jobs:
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
-
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
             type=ref,event=branch
             type=sha
-
+      - run: |
+          touch .npmrc
+          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> .npmrc
+          echo "cat .npmrc"
+          cat .npmrc
+      - run: ls -a -R .
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:

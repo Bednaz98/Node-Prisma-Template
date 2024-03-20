@@ -11,18 +11,21 @@
     "prisma"
   ],
   "scripts": {
-    "start": "npm run prisma-sync && ts-node ./src/server.ts",
-    "postinstall": "npm run generate",
+    "start": "npm run prisma-sync && npm run ts-start",
+    "ts-start": "ts-node ./src/server.ts",
+    "prepare": "npm run append-prisma && && npm run generate",
+    "prepublishOnly": "npm run append-prisma && npm run generate",
     "test": "jest",
     "lint": "npx eslint . --max-warnings 0",
     "increment": "npm version patch",
     "lint-fix": "eslint --fix",
     "build": "tsc -b",
-    "pr-test": "npm run test",
+    "pr-test": "npm run test && npm run lint-fix && npm run lint",
     "generate": "npx prisma generate",
     "test-pack": "npm i && npm run generate && npm run build && npm pack",
     "prisma-sync": "npx prisma db push",
-    "prisma-browser": "npx prisma studio"
+    "prisma-browser": "npx prisma studio",
+    "append-prisma": "ts-node ./jabPrisma.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.1.1",

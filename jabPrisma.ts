@@ -33,10 +33,14 @@ async function getPrismaFiles() {
 }
 
 (async () => {
-    const rawFiles = await getPrismaFiles()
-    const editFiles = rawFiles
-    const editScheme = (await fs.readFile(editPrismaPath)).toString()
-    const fileArray = [appendHeader, editScheme, ...editFiles].map((e) => e.replace(defaultRemove[0], '').replace(defaultRemove[1], '').replace(defaultRemove[2], '').trim())
-    const newFile = fileArray.filter((e) => e.length > 0).join('\n\n')
-    await fs.writeFile(defaultPrismaPath, newFile);
-})()
+    try {
+        const rawFiles = await getPrismaFiles();
+        const editFiles = rawFiles;
+        const editScheme = (await fs.readFile(editPrismaPath).catch(e => { console.error(e); return "" })).toString();
+        const fileArray = [appendHeader, editScheme, ...editFiles].map((e) => e.replace(defaultRemove[0], '').replace(defaultRemove[1], '').replace(defaultRemove[2], '').trim());
+        const newFile = fileArray.filter((e) => e.length > 0).join('\n\n');
+        await fs.writeFile(defaultPrismaPath, newFile);
+    } catch (error) {
+        console.error(error);
+    }
+})();
