@@ -18,17 +18,18 @@ const getPrisma = (): PrismaClient => {
             return new PrismaClient({
                 datasources: {
                     db: {
-                        url: dbString.trim(),
+                        url: `${dbString?.trim()}/test`,
                     },
                 },
             })
         }
+        console.log("undefined DB string")
         console.log('direct db string injection failed, using default prisma client\n');
-        return new PrismaClient()
+        return new PrismaClient();
     } catch (error) {
         console.log("prisma client error, using default client")
-        console.error(error)
-        return new PrismaClient()
+        console.error(error);
+        return new PrismaClient();
     }
 }
 

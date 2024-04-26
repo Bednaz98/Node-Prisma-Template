@@ -15,11 +15,12 @@ services:
       - SYSTEM_KEY_APPLICATION_NAME={{SYSTEM_KEY_APPLICATION_NAME}
       - ENABLE_LOCAL_LOG={{ENABLE_LOCAL_LOG}}
       # other services ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      - LOGGING_ENDPOINT=http://{{hostIp}}:{{ LOGGER_PORT }}
-      - DATABASE_URL=postgresql://{{ DB_USER }}:{{DB_PASSWORD}}@{{hostIp}}:5432/dev
+      - DATABASE_URL=postgresql://{{ DB_USER }}:{{DB_PASSWORD}}@{{hostIp}}:5432
     image: ghcr.io/bednaz98/{{ repo_name }}:main
     ports:
       - {{ SYSTEM_PORT }}:{{ SYSTEM_PORT }}
+    expose:
+      - {{ SYSTEM_PORT }}
     restart: always
     depends_on:
       - database

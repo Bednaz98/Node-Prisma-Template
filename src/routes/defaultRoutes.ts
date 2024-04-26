@@ -12,7 +12,6 @@ export const defaultFunction = (req: Request, res: Response) => {
     console.debug("params: ", req.params)
     console.debug("body: ", req.body)
     res.status(200).send("testing");
-
 }
 
 testRoute.get("*", defaultFunction);

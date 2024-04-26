@@ -3,51 +3,60 @@
  * down below you can edit the config to test the logger settings
 */
 import express from "express"
-import { defaultFunction } from "./routes/routes";
-import { getDBStringDebug } from "./prisma";
+import { defaultFunction } from "./routes/defaultRoutes";
 
 
 
 
 
-console.log('server initiating ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+
 const app = express();
 app.use(express.json());
 app.disable('x-powered-by');
 
 
 
-app.get("*", defaultFunction);
-app.post("*", defaultFunction);
-app.put("*", defaultFunction);
-app.patch("*", defaultFunction);
-app.delete("*", defaultFunction);
+
+
 
 function getPort() {
-    const loggerPort = Number(process?.env["LOGGER_PORT"])
-    if (!isNaN(loggerPort)) {
-        console.log("detected logger port: ", loggerPort)
-        return loggerPort;
-    }
     const serverPort = Number(process.env?.["SERVER_PORT"])
-    if (!isNaN(serverPort)) {
+    if (!Number.isNaN(serverPort)) {
         console.log("detected sever port: ", serverPort)
         return Number(serverPort)
     }
     console.log("using default port: ", 3000);
     return 3000;
 }
-
 function printPackageVersion() {
     const packageJson = require('../package.json')
     console.log(`package json version: ${packageJson.version} `)
 }
 
-const port = getPort();
-console.log(getDBStringDebug(process.env?.["LOG_DATABASE_URL"]));
-printPackageVersion();
-const server = app.listen(port, () => { console.log(`Starting test server: ${port}`) });
-export default server;
+
+export default (async () => {
+    //initialization function
+    console.log('server initiating ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+    const env = process.env?.["SYSTEM_ENV"];
+    console.log("SYSTEM_ENV", env)
+    //testing routes
+    if (env?.includes('dev')) {
+        console.log("adding testing routes on dev")
+        app.get("/*", defaultFunction);
+        app.post("/*", defaultFunction);
+        app.put("/*", defaultFunction);
+        app.patch("/*", defaultFunction);
+        app.delete("/*", defaultFunction);
+    }
+
+
+
+    // Final server steps
+    const port = getPort();
+    printPackageVersion();
+    const server = app.listen(port, () => { console.log(`Starting test server: ${port}`) });
+    return server
+})();
 
 
 
