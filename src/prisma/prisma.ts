@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '@client-gen/test';
 
 export function getDBStringDebug(envString: string | undefined) {
     if (!envString) return "DB string: N/A";
