@@ -8,9 +8,12 @@ async function getPrismaFiles() {
     const nodeModules: string[] = await fs.readdir(jabDir).catch(() => []).then((e) => e)
     return (await Promise.all(nodeModules.map(async (m) => {
         try {
-            const prismaFiles: string[] = (await fs.readdir(jabDir + m + prismaConst).catch(() => []).then((e) => e)) ?? [];
+            let prismaFiles: string[] = (await fs.readdir(jabDir + `/${m}/` + prismaConst).catch(() => []).then((e) => e)) ?? [];
             if (prismaFiles.length < 1) return [];
-            const promiseFiles = await Promise.all(prismaFiles.map(async e => ({ fileName: e, file: (await fs.readFile(jabDir + m + e)).toString() })));
+            const promiseFiles = await Promise.all(prismaFiles.map(async e => {
+                return ({ fileName: e.replace(jabDir + m + `${prismaConst}/`, ""), file: (await fs.readFile(jabDir + m + `${prismaConst}/` + e)).toString() })
+            }
+            ));
             return promiseFiles;
         } catch (error) {
             console.error(error)
@@ -22,7 +25,7 @@ async function getPrismaFiles() {
 (async () => {
     try {
         const rawFiles = await getPrismaFiles();
-        const workFunction = rawFiles.map(async e => { fs.writeFile(defaultPrismaPath + e.fileName, e.file) })
+        const workFunction = rawFiles.map(async e => { fs.writeFile(defaultPrismaPath + `/${e.fileName}`, e.file) })
         await Promise.all(workFunction);
     } catch (error) {
         console.error(error);
